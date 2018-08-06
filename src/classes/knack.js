@@ -36,6 +36,7 @@ class Knack {
   async create(objectNo, body) {
     if (!objectNo) throw new Error("You must pass an object number");
     if (!body) throw new Error("You must pass a body");
+
     console.log("Creating", objectNo, JSON.stringify(body));
 
     const url = `${this.baseUrl}/${objectNo}/records`;
@@ -70,10 +71,10 @@ class Knack {
 
   async delete(objectNo, id) {
     const url = `${this.baseUrl}/${objectNo}/records/${id}`;
-    let response = await fetch(url, {
+    let response = await (await fetch(url, {
       headers: this.headers,
       method: "DELETE"
-    });
+    })).json();
 
     return response;
   }
