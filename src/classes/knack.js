@@ -36,6 +36,7 @@ class Knack {
   async create(objectNo, body) {
     if (!objectNo) throw new Error("You must pass an object number");
     if (!body) throw new Error("You must pass a body");
+    console.log("Creating", objectNo, JSON.stringify(body));
 
     const url = `${this.baseUrl}/${objectNo}/records`;
     let response = await fetch(url, {
