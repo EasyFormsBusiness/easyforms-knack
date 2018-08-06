@@ -47,6 +47,16 @@ class Knack {
     return response;
   }
 
+  async delete(objectNo, id) {
+    const url = `${this.baseUrl}/${objectNo}/records/${id}`;
+    let response = await fetch(url, {
+      headers: this.headers,
+      method: "DELETE"
+    });
+
+    return response;
+  }
+
   async search(objectNo, filters, retry = 1) {
     console.log("Searching", objectNo, JSON.stringify(filters));
 
