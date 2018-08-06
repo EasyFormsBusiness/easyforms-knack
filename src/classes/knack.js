@@ -47,6 +47,23 @@ class Knack {
     return response;
   }
 
+  async upsert(objectNo, object) {
+    let filters = Object.keys(object).reduce(
+      (obj, field) => {
+        obj.rules.push({ field: field, operator: "is", value: object[field] });
+      },
+      { match: "and", rules: [] }
+    );
+
+    let [record] = await this.search(objectNo, filters);
+
+    if (record) {
+      return await this.update(objectNo, record.id, object);
+    } else {
+      return await this.create(objectNo, object);
+    }
+  }
+
   async delete(objectNo, id) {
     const url = `${this.baseUrl}/${objectNo}/records/${id}`;
     let response = await fetch(url, {
