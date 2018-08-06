@@ -1,4 +1,6 @@
 [![pipeline status](https://toolbox.easyforms.tech/easyforms/knack/badges/master/pipeline.svg)](https://toolbox.easyforms.tech/easyforms/knack/commits/master)
+[![coverage report](https://toolbox.easyforms.tech/easyforms/knack/badges/master/coverage.svg)](https://toolbox.easyforms.tech/easyforms/knack/commits/master)
+
 ## How to install this dependency:
 Add the following to your dependencies:
 
