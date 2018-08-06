@@ -40,8 +40,11 @@ class Knack {
     const url = `${this.baseUrl}/${objectNo}/records`;
     let response = await fetch(url, {
       headers: this.headers,
+      method: "POST",
       body: JSON.stringify(body)
     });
+
+    return response;
   }
 
   async search(objectNo, filters, retry = 1) {
