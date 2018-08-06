@@ -33,6 +33,17 @@ class Knack {
     }
   }
 
+  async create(objectNo, body) {
+    if (!objectNo) throw new Error("You must pass an object number");
+    if (!body) throw new Error("You must pass a body");
+
+    const url = `${this.baseUrl}/${objectNo}/records`;
+    let response = await fetch(url, {
+      headers: this.headers,
+      body: JSON.stringify(body)
+    });
+  }
+
   async search(objectNo, filters, retry = 1) {
     console.log("Searching", objectNo, JSON.stringify(filters));
 
