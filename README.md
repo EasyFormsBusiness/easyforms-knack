@@ -16,3 +16,7 @@ via SSH to have it work
 2. Create a new instance: 
     - `let knack = new Knack(key, id)`
 3. Call methods!
+
+__NB:__ if you are using a version of `npm` between 5.1 and 5.6 you may encounter 
+a bug where every other module you install will remove this (and other git) 
+modules. Upgrading `npm` to 5.7 or higher should fix this issue.
