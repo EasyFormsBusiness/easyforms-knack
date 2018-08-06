@@ -22,11 +22,11 @@ class Knack {
     const url = `${this.baseUrl}/${objectNo}/records/${recordId}`;
 
     try {
-      let response = await fetch(url, {
+      let response = await (await fetch(url, {
         headers: this.headers,
         method: "PUT",
         body: JSON.stringify(update)
-      });
+      })).json();
       return response;
     } catch (error) {
       throw Error(error.message);
@@ -39,11 +39,11 @@ class Knack {
     console.log("Creating", objectNo, JSON.stringify(body));
 
     const url = `${this.baseUrl}/${objectNo}/records`;
-    let response = await fetch(url, {
+    let response = await (await fetch(url, {
       headers: this.headers,
       method: "POST",
       body: JSON.stringify(body)
-    });
+    })).json();
 
     return response;
   }
