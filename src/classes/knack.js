@@ -49,6 +49,8 @@ class Knack {
   }
 
   async upsert(objectNo, object) {
+    console.log("Upsert", objectNo, JSON.stringify(object));
+
     let filters = Object.keys(object).reduce(
       (obj, field) => {
         obj.rules.push({ field: field, operator: "is", value: object[field] });
