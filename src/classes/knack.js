@@ -5,6 +5,12 @@ const sleep = require("util").promisify(setTimeout);
 // Global (static) varibles (just primatives!)
 
 class Knack {
+  /**
+   *Creates an instance of Knack.
+   * @param {string} apiKey
+   * @param {string} applicationId
+   * @memberof Knack
+   */
   constructor(apiKey, applicationId) {
     this.apiKey = apiKey;
     this.applicationId = applicationId;
