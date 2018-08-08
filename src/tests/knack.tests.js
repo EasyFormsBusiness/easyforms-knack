@@ -65,7 +65,7 @@ describe("Testing Knack module", () => {
       });
     });
 
-    describe("Testing update", () => {
+    describe("Testing search", () => {
       it("Should find the updated object", async () => {
         console.log(
           await knack.search(objectNo, {
