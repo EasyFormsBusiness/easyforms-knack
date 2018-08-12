@@ -75,7 +75,7 @@ class Knack {
     }
   }
 
-  async delete(objectNo, id, retries = 0) {
+  async delete(objectNo, id, retry = 0) {
     const url = `${this.baseUrl}/${objectNo}/records/${id}`;
     let response;
     try {
@@ -84,8 +84,8 @@ class Knack {
         method: "DELETE"
       })).json();
     } catch (error) {
-      retires += 1;
-      if (retries < 5) {
+      retry += 1;
+      if (retry < 5) {
         this.delete(objectNo, id, retries);
       } else {
         throw new Error(error);
