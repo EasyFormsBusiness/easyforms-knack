@@ -86,7 +86,7 @@ class Knack {
     } catch (error) {
       retry += 1;
       if (retry < 5) {
-        this.delete(objectNo, id, retries);
+        this.delete(objectNo, id, retry);
       } else {
         throw new Error(error);
       }
