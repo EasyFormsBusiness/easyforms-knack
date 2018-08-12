@@ -20,7 +20,8 @@ describe("Testing Knack module", () => {
       it("Should create an object", async () => {
         newObj = await knack.create(objectNo, {
           field_1: "string",
-          field_2: 0
+          field_2: 0,
+          field_3: { first: "Taylor", last: "Kettle" }
         });
         console.log(newObj);
       });
@@ -42,13 +43,28 @@ describe("Testing Knack module", () => {
           assert.equal(error.message, "You must pass an object number");
         }
       });
+
+      it("Testing create of multiple objects at once", async () => {
+        let promises = [];
+        for (let index = 0; index < 100; index++) {
+          promises.push(
+            knack.create(objectNo, {
+              field_1: "string",
+              field_2: 0,
+              field_3: { first: "Taylor", last: "Kettle" }
+            })
+          );
+        }
+        await Promise.all(promises);
+      });
     });
     describe("Testing update", () => {
       it("Should update an object", async () => {
         console.log(
           await knack.update(objectNo, newObj.id, {
             field_1: "stringstring",
-            field_2: 1
+            field_2: 1,
+            field_3: { first: "Kaylor", last: "Tettle" }
           })
         );
       });
@@ -59,7 +75,8 @@ describe("Testing Knack module", () => {
         console.log(
           await knack.upsert(objectNo, {
             field_1: "stringstring",
-            field_2: 1
+            field_2: 1,
+            field_3_raw: "Kaylor Tettle"
           })
         );
       });

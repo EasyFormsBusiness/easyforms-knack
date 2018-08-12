@@ -1,6 +1,5 @@
 const fetch = require("node-fetch");
 const qs = require("qs");
-const sleep = require("util").promisify(setTimeout);
 
 // Global (static) varibles (just primatives!)
 
@@ -39,18 +38,29 @@ class Knack {
     }
   }
 
-  async create(objectNo, body) {
+  async create(objectNo, body, retry = 0) {
     if (!objectNo) throw new Error("You must pass an object number");
     if (!body) throw new Error("You must pass a body");
 
     // console.log("Creating", objectNo, JSON.stringify(body));
 
     const url = `${this.baseUrl}/${objectNo}/records`;
-    let response = await (await fetch(url, {
-      headers: this.headers,
-      method: "POST",
-      body: JSON.stringify(body)
-    })).json();
+    let response;
+    try {
+      response = await (await fetch(url, {
+        headers: this.headers,
+        method: "POST",
+        body: JSON.stringify(body)
+      })).json();
+    } catch (error) {
+      retry += 1;
+      if (retry < 5) {
+        await sleep(getRandomInt(1000 * 10));
+        this.create(objectNo, body, retry);
+      } else {
+        throw new Error(error);
+      }
+    }
 
     return response;
   }
@@ -125,6 +135,14 @@ class Knack {
       }
     }
   }
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
 }
 
 module.exports = Knack;
