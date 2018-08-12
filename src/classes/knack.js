@@ -23,7 +23,7 @@ class Knack {
   }
 
   async update(objectNo, recordId, update) {
-    console.log("Updating", objectNo, recordId, JSON.stringify(update));
+    // console.log("Updating", objectNo, recordId, JSON.stringify(update));
 
     const url = `${this.baseUrl}/${objectNo}/records/${recordId}`;
 
@@ -43,7 +43,7 @@ class Knack {
     if (!objectNo) throw new Error("You must pass an object number");
     if (!body) throw new Error("You must pass a body");
 
-    console.log("Creating", objectNo, JSON.stringify(body));
+    // console.log("Creating", objectNo, JSON.stringify(body));
 
     const url = `${this.baseUrl}/${objectNo}/records`;
     let response = await (await fetch(url, {
@@ -56,7 +56,7 @@ class Knack {
   }
 
   async upsert(objectNo, object) {
-    console.log("Upsert", objectNo, JSON.stringify(object));
+    // console.log("Upsert", objectNo, JSON.stringify(object));
 
     let filters = Object.keys(object).reduce(
       (obj, field) => {
@@ -96,7 +96,7 @@ class Knack {
   }
 
   async search(objectNo, filters, retry = 1) {
-    console.log("Searching", objectNo, JSON.stringify(filters));
+    // console.log("Searching", objectNo, JSON.stringify(filters));
 
     const url = `${
       this.baseUrl
