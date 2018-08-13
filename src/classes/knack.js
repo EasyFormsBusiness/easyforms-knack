@@ -135,6 +135,33 @@ class Knack {
       }
     }
   }
+
+  async get(objectNo, retry = 1) {
+    let allRecords = [];
+    let page = 1;
+    let totalPages = 1;
+    let rowsPerPage = 1000;
+
+    try {
+      while (page <= totalPages) {
+        const url = `${
+          this.baseUrl
+        }/${objectNo}/records?page=${page}?rows_per_page=${rows}`;
+        let { total_pages, records } = await fetch(url, {
+          headers: this.headers
+        });
+        totalPages = total_pages;
+        page += 1;
+        allRecords = allRecords.concat(records);
+      }
+    } catch (error) {
+      if (retry < 5) {
+        retry += 1;
+        this.get(objectNo, retry);
+      }
+    }
+    return allRecords;
+  }
 }
 
 function sleep(ms) {

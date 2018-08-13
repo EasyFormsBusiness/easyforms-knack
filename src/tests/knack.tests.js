@@ -16,6 +16,12 @@ describe("Testing Knack module", () => {
   describe("Testing CRUD", () => {
     let newObj;
 
+    describe("Testing read", () => {
+      it("Should read all the records from a table", async () => {
+        console.log(await knack.get("object_1"));
+      });
+    });
+
     describe("Testing create", () => {
       it("Should create an object", async () => {
         newObj = await knack.create(objectNo, {
