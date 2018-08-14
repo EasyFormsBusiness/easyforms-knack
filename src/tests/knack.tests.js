@@ -2,8 +2,9 @@ const Knack = require("../classes/knack");
 const assert = require("assert");
 
 describe("Testing Knack module", () => {
-  const id = "5b60597b64d34e4e8ee836a3";
-  const key = "5fc4af70-94bf-11e8-a694-cdbf9f6f6d3c";
+  // Using Epic360.old
+  const id = "5983ba77203a0e5c3aed6550";
+  const key = "35193a40-78bc-11e7-abce-854d0143ec1e";
   const objectNo = "object_1";
 
   const body = {
