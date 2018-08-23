@@ -53,7 +53,7 @@ describe("Testing Knack module", () => {
 
       it("Testing create of multiple objects at once", async () => {
         let promises = [];
-        for (let index = 0; index < 100; index++) {
+        for (let index = 0; index < 10; index++) {
           promises.push(
             knack.create(objectNo, {
               field_1: "string",
