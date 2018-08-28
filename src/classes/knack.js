@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
 const qs = require("qs");
+const regeneratorRuntime = require("regenerator-runtime");
 
 // Global (static) varibles (just primatives!)
 
