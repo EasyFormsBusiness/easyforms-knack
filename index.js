@@ -1,1 +1,1 @@
-module.exports = { Knack: require("./src/classes/knack") };
+module.exports = { Knack: require("./lib/classes/knack") };
