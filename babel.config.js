@@ -8,6 +8,17 @@ const presets = [
         chrome: "67",
         safari: "11.1"
       },
+      plugins: [
+        [
+          "@babel/plugin-transform-runtime",
+          {
+            corejs: false,
+            helpers: true,
+            regenerator: true,
+            useESModules: false
+          }
+        ]
+      ],
       useBuiltIns: "usage"
     }
   ]

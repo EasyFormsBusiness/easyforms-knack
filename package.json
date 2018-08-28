@@ -16,12 +16,14 @@
   "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
+    "@babel/runtime": "^7.0.0",
     "node-fetch": "^2.2.0",
     "qs": "^6.5.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "assert": "^1.4.1",
     "mocha": "^5.2.0",
