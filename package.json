@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "nyc npm run mocha",
-    "mocha": "mocha src/tests/ --timeout 10000",
+    "mocha": "mocha src/tests/ --timeout 20000",
     "compile": "./node_modules/.bin/babel src --out-dir lib --presets=@babel/env"
   },
   "repository": {

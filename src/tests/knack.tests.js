@@ -92,7 +92,7 @@ describe("Testing Knack module", () => {
     describe("Testing search", () => {
       it("Should find the updated object", async () => {
         console.log(
-          await knack.search(objectNo, {
+          (await knack.search(objectNo, {
             match: "and",
             rules: [
               {
@@ -106,7 +106,7 @@ describe("Testing Knack module", () => {
                 value: 1
               }
             ]
-          })
+          })).length
         );
       });
     });

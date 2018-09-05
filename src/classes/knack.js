@@ -107,7 +107,9 @@ class Knack {
   }
 
   async search(objectNo, filters, retry = 1) {
-    // console.log("Searching", objectNo, JSON.stringify(filters));
+    let page = 1;
+    let totalPages = 1;
+    let allRecords = [];
 
     const url = `${
       this.baseUrl
@@ -116,11 +118,22 @@ class Knack {
     )}`;
 
     try {
-      let { records } = await (await fetch(url, {
-        headers: this.headers
-      })).json();
+      while (page <= totalPages) {
+        let { records, total_pages } = await (await fetch(
+          `${this.baseUrl}/${objectNo}/records?filters=${encodeURIComponent(
+            JSON.stringify(filters)
+          )}&rows_per_page=1000&page=${page}`,
+          {
+            headers: this.headers
+          }
+        )).json();
 
-      return records;
+        allRecords = allRecords.concat(records);
+        totalPages = total_pages;
+        page += 1;
+      }
+
+      return allRecords;
     } catch (error) {
       if (retry <= 5) {
         let retryDelay = Math.random() * 10 * 1000;
