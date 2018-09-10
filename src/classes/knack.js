@@ -66,10 +66,21 @@ class Knack {
     return response;
   }
 
-  async upsert(objectNo, object) {
+  /**
+   *
+   *
+   * @param {*} objectNo
+   * @param {*} object The that represents the row you'd like to upsert
+   * @param {*} searchObject The object to use as a filter, may be different to the one you insert
+   * @returns
+   * @memberof Knack
+   */
+  async upsert(objectNo, object, searchObject) {
     // console.log("Upsert", objectNo, JSON.stringify(object));
 
-    let filters = Object.keys(object).reduce(
+    if (!searchObject) searchObject = object;
+
+    let filters = Object.keys(searchObject).reduce(
       (obj, field) => {
         obj.rules.push({ field: field, operator: "is", value: object[field] });
         return obj;
