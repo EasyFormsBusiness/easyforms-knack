@@ -190,7 +190,7 @@ class Knack {
 
   async getOne(objectNo, id, retry = 1) {
     try {
-      await (await fetch(`${this.baseUrl}/objects/${objectNo}/${id}`, {
+      return await (await fetch(`${this.baseUrl}/${objectNo}/records/${id}`, {
         headers: this.headers
       })).json();
     } catch (error) {

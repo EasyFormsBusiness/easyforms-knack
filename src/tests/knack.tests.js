@@ -19,7 +19,13 @@ describe("Testing Knack module", () => {
 
     describe("Testing read", () => {
       it("Should read all the records from a table", async () => {
-        console.log(await knack.get("object_1"));
+        await knack.get("object_1");
+      });
+    });
+
+    describe("Testing read one", () => {
+      it("Should one record from a table", async () => {
+        console.log(await knack.getOne("object_1", "5bdba448e3200d47b68e9071"));
       });
     });
 
