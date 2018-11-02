@@ -4,7 +4,7 @@
 ## How to install this dependency:
 Add the following to your dependencies:
 
-`"easyforms-knack": "git+ssh://git@gitlab.com:easyformsltd/knack.git"`
+`"easyforms-knack": "git+ssh://git@gitlab.com:scops_solution/easyformsltd/knack.git"`
 
 Or enter the following command:
 
