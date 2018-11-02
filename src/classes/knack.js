@@ -187,6 +187,20 @@ class Knack {
     }
     return allRecords;
   }
+
+  async getOne(objectNo, id, retry = 1) {
+    try {
+      await (await fetch(`${this.baseUrl}/objects/${objectNo}/${id}`, {
+        headers: this.headers
+      })).json();
+    } catch (error) {
+      console.error(error);
+      if (retry < 2) {
+        retry += 1;
+        this.getOne(objectNo, id, retry);
+      }
+    }
+  }
 }
 
 function sleep(ms) {
