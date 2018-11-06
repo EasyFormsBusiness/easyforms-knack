@@ -8,7 +8,7 @@ Add the following to your dependencies:
 
 Or enter the following command:
 
-`npm i git+ssh://git@gitlab.com:easyformsltd/knack.git`
+`npm i git+ssh://git@gitlab.com:scops_solution/easyformsltd/knack.git`
 
 Note you will need to have your current user and your gitlab account hooked up 
 via SSH to have it work
