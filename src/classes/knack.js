@@ -12,6 +12,7 @@ class Knack {
    * @memberof Knack
    */
   constructor(apiKey, applicationId) {
+    this.debug = false;
     this.apiKey = apiKey;
     this.applicationId = applicationId;
     this.baseUrl = "https://api.knack.com/v1/objects";
@@ -117,27 +118,38 @@ class Knack {
     return response;
   }
 
-  async search(objectNo, filters, retry = 1) {
+  async search(
+    objectNo,
+    filters,
+    sortField = false,
+    sortOrder = false,
+    retry = 1
+  ) {
     let page = 1;
     let totalPages = 1;
     let allRecords = [];
+
+    if (sortField ? !sortOrder : sortOrder) {
+      throw new Error("Must specify both sortField and sortOrder!");
+    }
 
     const url = `${
       this.baseUrl
     }/${objectNo}/records?filters=${encodeURIComponent(
       JSON.stringify(filters)
-    )}`;
+    )}&rows_per_page=1000&page=${page}${
+      sortField && sortOrder
+        ? `&sort_field=${sortField}&sort_order=${sortOrder}`
+        : ""
+    }`;
+
+    if (this.debug) console.log(url);
 
     try {
       while (page <= totalPages) {
-        let { records, total_pages } = await (await fetch(
-          `${this.baseUrl}/${objectNo}/records?filters=${encodeURIComponent(
-            JSON.stringify(filters)
-          )}&rows_per_page=1000&page=${page}`,
-          {
-            headers: this.headers
-          }
-        )).json();
+        let { records, total_pages } = await (await fetch(url, {
+          headers: this.headers
+        })).json();
 
         allRecords = allRecords.concat(records);
         totalPages = total_pages;
@@ -153,7 +165,13 @@ class Knack {
             1000} seconds...`
         );
         await sleep(retryDelay);
-        return this.search(objectNo, filters, (retry += 1));
+        return this.search(
+          objectNo,
+          filters,
+          sortField,
+          sortOrder,
+          (retry += 1)
+        );
       } else {
         console.error("Error searching in knack", error);
         throw Error(error);

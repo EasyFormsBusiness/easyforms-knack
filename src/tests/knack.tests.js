@@ -13,6 +13,7 @@ describe("Testing Knack module", () => {
   };
 
   let knack = new Knack(key, id);
+  knack.debug = true;
 
   describe("Testing CRUD", () => {
     let newObj;
@@ -98,21 +99,26 @@ describe("Testing Knack module", () => {
     describe("Testing search", () => {
       it("Should find the updated object", async () => {
         console.log(
-          (await knack.search(objectNo, {
-            match: "and",
-            rules: [
-              {
-                field: "field_1",
-                operator: "is",
-                value: "stringstring"
-              },
-              {
-                field: "field_2",
-                operator: "is",
-                value: 1
-              }
-            ]
-          })).length
+          (await knack.search(
+            objectNo,
+            {
+              match: "and",
+              rules: [
+                {
+                  field: "field_1",
+                  operator: "is",
+                  value: "stringstring"
+                },
+                {
+                  field: "field_2",
+                  operator: "is",
+                  value: 1
+                }
+              ]
+            },
+            "field_1",
+            "asc"
+          )).length
         );
       });
     });
