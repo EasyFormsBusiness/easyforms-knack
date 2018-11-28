@@ -1,10 +1,12 @@
 const Knack = require("../classes/knack");
 const assert = require("assert");
+require("dotenv").config();
 
 describe("Testing Knack module", () => {
   // Using Epic360.old
-  const id = "5983ba77203a0e5c3aed6550";
-  const key = "35193a40-78bc-11e7-abce-854d0143ec1e";
+  const { ApiKey, AppId } = process.env;
+  const id = AppId;
+  const key = ApiKey;
   const objectNo = "object_1";
 
   const body = {
