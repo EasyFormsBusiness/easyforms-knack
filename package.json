@@ -6,7 +6,8 @@
   "scripts": {
     "test": "nyc npm run mocha",
     "mocha": "mocha src/tests/ --timeout 20000",
-    "compile": "./node_modules/.bin/babel src --out-dir lib --presets=@babel/env"
+    "compile": "./node_modules/.bin/babel src --out-dir lib --presets=@babel/env",
+    "patch": "npm run compile && git add . && git commit -m 'patching' && git push&& npm version patch && npm publish"
   },
   "repository": {
     "type": "git",

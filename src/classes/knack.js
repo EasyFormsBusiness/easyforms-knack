@@ -133,18 +133,17 @@ class Knack {
       throw new Error("Must specify both sortField and sortOrder!")
     }
 
-    const url = `${
-      this.baseUrl
-    }/${objectNo}/records?filters=${encodeURIComponent(
-      JSON.stringify(filters)
-    )}&rows_per_page=1000&page=${page}${
-      sortField && sortOrder
-        ? `&sort_field=${sortField}&sort_order=${sortOrder}`
-        : ""
-    }`
-
     try {
       while (page <= totalPages) {
+        let url = `${
+          this.baseUrl
+        }/${objectNo}/records?filters=${encodeURIComponent(
+          JSON.stringify(filters)
+        )}&rows_per_page=1000&page=${page}${
+          sortField && sortOrder
+            ? `&sort_field=${sortField}&sort_order=${sortOrder}`
+            : ""
+        }`
         if (this.debug) console.log(url)
 
         let { records, total_pages } = await (await fetch(url, {
