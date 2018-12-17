@@ -1,134 +1,146 @@
-const Knack = require("../classes/knack");
-const assert = require("assert");
-require("dotenv").config();
+const Knack = require('../classes/knack')
+const assert = require('assert')
+require('dotenv').config()
 
-describe("Testing Knack module", () => {
+describe('Testing Knack module', () => {
   // Using Epic360.old
-  const { ApiKey, AppId } = process.env;
-  const id = AppId;
-  const key = ApiKey;
-  const objectNo = "object_1";
+  const { ApiKey, AppId } = process.env
+  const id = AppId
+  const key = ApiKey
+  const objectNo = 'object_1'
 
   const body = {
-    field_1: "string",
+    field_1: 'string',
     field_2: 0
-  };
+  }
 
-  let knack = new Knack(key, id);
-  knack.debug = true;
+  let knack = new Knack(key, id)
+  knack.debug = true
 
-  describe("Testing CRUD", () => {
-    let newObj;
+  describe('Testing CRUD', () => {
+    let newObj
 
-    describe("Testing read", () => {
-      it("Should read all the records from a table", async () => {
-        await knack.get("object_1");
-      });
-    });
+    describe('Testing read', () => {
+      it('Should read all the records from a table', async () => {
+        await knack.get('object_1')
+      })
+    })
 
-    describe("Testing read one", () => {
-      it("Should one record from a table", async () => {
-        console.log(await knack.getOne("object_1", "5bdba448e3200d47b68e9071"));
-      });
-    });
+    describe('Testing read one', () => {
+      it('Should one record from a table', async () => {
+        console.log(await knack.getOne('object_1', '5bdba448e3200d47b68e9071'))
+      })
+    })
 
-    describe("Testing create", () => {
-      it("Should create an object", async () => {
+    describe('Testing create', () => {
+      it('Should create an object', async () => {
         newObj = await knack.create(objectNo, {
-          field_1: "string",
+          field_1: 'string',
           field_2: 0,
-          field_3: { first: "Taylor", last: "Kettle" }
-        });
-        console.log(newObj);
-      });
+          field_3: { first: 'Taylor', last: 'Kettle' }
+        })
+        console.log(newObj)
+      })
 
-      it("Should throw an error if no body is passed", async () => {
+      it('Should throw an error if no body is passed', async () => {
         try {
-          await knack.create(objectNo);
-          throw new Error("Did not throw an error for no body");
+          await knack.create(objectNo)
+          throw new Error('Did not throw an error for no body')
         } catch (error) {
-          assert.equal(error.message, "You must pass a body");
+          assert.equal(error.message, 'You must pass a body')
         }
-      });
+      })
 
-      it("Should throw an error if no object number is passed", async () => {
+      it('Should throw an error if no object number is passed', async () => {
         try {
-          await knack.create();
-          throw new Error("Did not throw an error for no object number");
+          await knack.create()
+          throw new Error('Did not throw an error for no object number')
         } catch (error) {
-          assert.equal(error.message, "You must pass an object number");
+          assert.equal(error.message, 'You must pass an object number')
         }
-      });
+      })
 
-      it("Testing create of multiple objects at once", async () => {
-        let promises = [];
+      it('Testing create of multiple objects at once', async () => {
+        let promises = []
         for (let index = 0; index < 10; index++) {
           promises.push(
             knack.create(objectNo, {
-              field_1: "string",
+              field_1: 'string',
               field_2: 0,
-              field_3: { first: "Taylor", last: "Kettle" }
+              field_3: { first: 'Taylor', last: 'Kettle' }
             })
-          );
+          )
         }
-        await Promise.all(promises);
-      });
-    });
-    describe("Testing update", () => {
-      it("Should update an object", async () => {
+        await Promise.all(promises)
+      })
+    })
+    describe('Testing update', () => {
+      it('Should update an object', async () => {
         console.log(
           await knack.update(objectNo, newObj.id, {
-            field_1: "stringstring",
+            field_1: 'stringstring',
             field_2: 1,
-            field_3: { first: "Kaylor", last: "Tettle" }
+            field_3: { first: 'Kaylor', last: 'Tettle' }
           })
-        );
-      });
-    });
+        )
+      })
+    })
 
-    describe("Testing upsert", () => {
-      it("Should upsert the object", async () => {
+    describe('Testing upsert', () => {
+      it('Should upsert the object', async () => {
         console.log(
           await knack.upsert(objectNo, {
-            field_1: "stringstring",
+            field_1: 'stringstring',
             field_2: 1,
-            field_3_raw: "Kaylor Tettle"
+            field_3_raw: 'Kaylor Tettle'
           })
-        );
-      });
-    });
+        )
+      })
+    })
 
-    describe("Testing search", () => {
-      it("Should find the updated object", async () => {
+    describe('Testing upload', () => {
+      it('Should upload a file', async () => {
+        console.log(
+          await knack.upload(
+            'object_14',
+            'field_156',
+            '/home/tkettle/code/knack/.eslintrc.json'
+          )
+        )
+      })
+    })
+
+    describe('Testing search', () => {
+      it('Should find the updated object', async () => {
         console.log(
           (await knack.search(
             objectNo,
             {
-              match: "and",
+              match: 'and',
               rules: [
                 {
-                  field: "field_1",
-                  operator: "is",
-                  value: "stringstring"
+                  field: 'field_1',
+                  operator: 'is',
+                  value: 'stringstring'
                 },
                 {
-                  field: "field_2",
-                  operator: "is",
+                  field: 'field_2',
+                  operator: 'is',
                   value: 1
                 }
               ]
             },
-            "field_1",
-            "asc"
+            'field_1',
+            'asc'
           )).length
-        );
-      });
-    });
+        )
+      })
+    })
 
-    describe("Testing delete", () => {
-      it("Should delete the created object", async () => {
-        console.log(await knack.delete(objectNo, newObj.id));
-      });
-    });
-  });
-});
+    describe('Testing delete', () => {
+      it('Should delete the created object', async () => {
+        console.log(await knack.delete(objectNo, newObj.id))
+      })
+    })
+  })
+})

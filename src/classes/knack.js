@@ -1,6 +1,8 @@
-const fetch = require("node-fetch")
-const qs = require("qs")
-const regeneratorRuntime = require("regenerator-runtime")
+const fetch = require('node-fetch')
+const qs = require('qs')
+const regeneratorRuntime = require('regenerator-runtime')
+const FormData = require('form-data')
+const fs = require('fs-extra')
 
 // Global (static) varibles (just primatives!)
 
@@ -11,19 +13,19 @@ class Knack {
    * @param {string} applicationId
    * @memberof Knack
    */
-  constructor(apiKey, applicationId) {
+  constructor (apiKey, applicationId) {
     this.debug = false
     this.apiKey = apiKey
     this.applicationId = applicationId
-    this.baseUrl = "https://api.knack.com/v1/objects"
+    this.baseUrl = 'https://api.knack.com/v1/objects'
     this.headers = {
-      "X-Knack-Application-Id": this.applicationId,
-      "X-Knack-REST-API-KEY": this.apiKey,
-      "Content-Type": "application/json"
+      'X-Knack-Application-Id': this.applicationId,
+      'X-Knack-REST-API-KEY': this.apiKey,
+      'Content-Type': 'application/json'
     }
   }
 
-  async update(objectNo, recordId, update) {
+  async update (objectNo, recordId, update) {
     // console.log("Updating", objectNo, recordId, JSON.stringify(update));
 
     const url = `${this.baseUrl}/${objectNo}/records/${recordId}`
@@ -31,7 +33,7 @@ class Knack {
     try {
       let response = await (await fetch(url, {
         headers: this.headers,
-        method: "PUT",
+        method: 'PUT',
         body: JSON.stringify(update)
       })).json()
       return response
@@ -40,9 +42,9 @@ class Knack {
     }
   }
 
-  async create(objectNo, body, retry = 0) {
-    if (!objectNo) throw new Error("You must pass an object number")
-    if (!body) throw new Error("You must pass a body")
+  async create (objectNo, body, retry = 0) {
+    if (!objectNo) throw new Error('You must pass an object number')
+    if (!body) throw new Error('You must pass a body')
 
     // console.log("Creating", objectNo, JSON.stringify(body));
 
@@ -51,7 +53,7 @@ class Knack {
     try {
       response = await (await fetch(url, {
         headers: this.headers,
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify(body)
       })).json()
     } catch (error) {
@@ -76,17 +78,17 @@ class Knack {
    * @returns
    * @memberof Knack
    */
-  async upsert(objectNo, object, searchObject) {
+  async upsert (objectNo, object, searchObject) {
     // console.log("Upsert", objectNo, JSON.stringify(object));
 
     if (!searchObject) searchObject = object
 
     let filters = Object.keys(searchObject).reduce(
       (obj, field) => {
-        obj.rules.push({ field: field, operator: "is", value: object[field] })
+        obj.rules.push({ field: field, operator: 'is', value: object[field] })
         return obj
       },
-      { match: "and", rules: [] }
+      { match: 'and', rules: [] }
     )
 
     let [record] = await this.search(objectNo, filters)
@@ -98,13 +100,13 @@ class Knack {
     }
   }
 
-  async delete(objectNo, id, retry = 0) {
+  async delete (objectNo, id, retry = 0) {
     const url = `${this.baseUrl}/${objectNo}/records/${id}`
     let response
     try {
       response = await (await fetch(url, {
         headers: this.headers,
-        method: "DELETE"
+        method: 'DELETE'
       })).json()
     } catch (error) {
       retry += 1
@@ -118,7 +120,40 @@ class Knack {
     return response
   }
 
-  async search(
+  async upload (object, field, filepath, retry = 0) {
+    let data = new FormData()
+    data.append('files', fs.createReadStream(filepath))
+    const file = await (await fetch(
+      `https://api.knack.com/v1/applications/${
+        this.applicationId
+      }/assets/file/upload`,
+      {
+        method: 'POST',
+        headers: {
+          'x-knack-rest-api-key': this.apiKey
+        },
+        body: data
+      }
+    )).json()
+
+    if (!('id' in file)) throw new Error('Failed to create upload in knack!')
+
+    const { id, type, filename, public_url, thumb_url, size } = file
+
+    const row = await (await fetch(`${this.baseUrl}/${object}/records`, {
+      method: 'POST',
+      headers: this.headers,
+      body: JSON.stringify({ [field]: id })
+    })).json()
+
+    if (!('id' in row)) {
+      throw new Error('Failed to create row with file in knack!')
+    }
+
+    return row
+  }
+
+  async search (
     objectNo,
     filters,
     sortField = false,
@@ -130,7 +165,7 @@ class Knack {
     let allRecords = []
 
     if (sortField ? !sortOrder : sortOrder) {
-      throw new Error("Must specify both sortField and sortOrder!")
+      throw new Error('Must specify both sortField and sortOrder!')
     }
 
     try {
@@ -142,7 +177,7 @@ class Knack {
         )}&rows_per_page=1000&page=${page}${
           sortField && sortOrder
             ? `&sort_field=${sortField}&sort_order=${sortOrder}`
-            : ""
+            : ''
         }`
         if (this.debug) console.log(url)
 
@@ -172,13 +207,13 @@ class Knack {
           (retry += 1)
         )
       } else {
-        console.error("Error searching in knack", error)
+        console.error('Error searching in knack', error)
         throw Error(error)
       }
     }
   }
 
-  async get(objectNo, retry = 1) {
+  async get (objectNo, retry = 1) {
     let allRecords = []
     let page = 1
     let totalPages = 1
@@ -205,7 +240,7 @@ class Knack {
     return allRecords
   }
 
-  async getOne(objectNo, id, retry = 1) {
+  async getOne (objectNo, id, retry = 1) {
     try {
       return await (await fetch(`${this.baseUrl}/${objectNo}/records/${id}`, {
         headers: this.headers
@@ -220,11 +255,11 @@ class Knack {
   }
 }
 
-function sleep(ms) {
+function sleep (ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-function getRandomInt(max) {
+function getRandomInt (max) {
   return Math.floor(Math.random() * Math.floor(max))
 }
 
