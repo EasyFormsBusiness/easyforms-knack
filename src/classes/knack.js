@@ -6,6 +6,9 @@ const fs = require('fs-extra')
 
 // Global (static) varibles (just primatives!)
 
+// TODO: create rate limiting process so that an instance of the Knack class
+// will not send more than 10 requests per second
+
 class Knack {
   /**
    *Creates an instance of Knack.
