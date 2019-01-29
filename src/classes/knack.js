@@ -62,7 +62,7 @@ class Knack {
     } catch (error) {
       retry += 1
       if (retry < 5) {
-        await sleep(getRandomInt(1000 * 10))
+        await sleep()
         this.create(objectNo, body, retry)
       } else {
         throw new Error(error)
@@ -97,9 +97,9 @@ class Knack {
     let [record] = await this.search(objectNo, filters)
 
     if (record) {
-      return await this.update(objectNo, record.id, object)
+      return this.update(objectNo, record.id, object)
     } else {
-      return await this.create(objectNo, object)
+      return this.create(objectNo, object)
     }
   }
 
@@ -196,12 +196,7 @@ class Knack {
       return allRecords
     } catch (error) {
       if (retry <= 5) {
-        let retryDelay = Math.random() * 10 * 1000
-        console.error(
-          `Error searching in knack, retry no. ${retry} in ${retryDelay /
-            1000} seconds...`
-        )
-        await sleep(retryDelay)
+        await sleep()
         return this.search(
           objectNo,
           filters,
@@ -237,6 +232,7 @@ class Knack {
       console.error(error)
       if (retry < 2) {
         retry += 1
+        await sleep()
         this.get(objectNo, retry)
       }
     }
@@ -252,18 +248,16 @@ class Knack {
       console.error(error)
       if (retry < 2) {
         retry += 1
+        await sleep()
         this.getOne(objectNo, id, retry)
       }
     }
   }
 }
 
-function sleep (ms) {
+function sleep ({ min = 1000, max = 10000 }) {
+  let ms = Math.random() * (max - min) + min
   return new Promise((resolve) => setTimeout(resolve, ms))
-}
-
-function getRandomInt (max) {
-  return Math.floor(Math.random() * Math.floor(max))
 }
 
 module.exports = Knack
