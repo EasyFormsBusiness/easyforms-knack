@@ -8,7 +8,7 @@
     "mocha": "mocha src/tests/ --timeout 20000",
     "compile": "./node_modules/.bin/babel src --out-dir lib --presets=@babel/env",
     "bundle": "browserify src/classes/knack.js -o lib/bundle.js",
-    "patch": "npm run compile && git add . && git commit -m 'patching' && git push&& npm version patch && npm publish"
+    "patch": "npm run compile && git add . && git commit -m 'building' && git push && npm version patch && npm publish"
   },
   "repository": {
     "type": "git",

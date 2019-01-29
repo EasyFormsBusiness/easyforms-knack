@@ -4,6 +4,12 @@ const regeneratorRuntime = require('regenerator-runtime')
 const FormData = require('form-data')
 const fs = require('fs-extra')
 
+const MAX_RETRY = 5
+
+const MAX_SLEEP = 5000
+
+const MIN_SLEEP = 1000
+
 // Global (static) varibles (just primatives!)
 
 // TODO: create rate limiting process so that an instance of the Knack class
@@ -61,7 +67,7 @@ class Knack {
       })).json()
     } catch (error) {
       retry += 1
-      if (retry < 5) {
+      if (retry < MAX_RETRY) {
         await sleep()
         this.create(objectNo, body, retry)
       } else {
@@ -113,7 +119,7 @@ class Knack {
       })).json()
     } catch (error) {
       retry += 1
-      if (retry < 5) {
+      if (retry < MAX_RETRY) {
         this.delete(objectNo, id, retry)
       } else {
         throw new Error(error)
@@ -195,7 +201,7 @@ class Knack {
 
       return allRecords
     } catch (error) {
-      if (retry <= 5) {
+      if (retry < MAX_RETRY) {
         await sleep()
         return this.search(
           objectNo,
@@ -205,8 +211,7 @@ class Knack {
           (retry += 1)
         )
       } else {
-        console.error('Error searching in knack', error)
-        throw Error(error)
+        throw new Error(error)
       }
     }
   }
@@ -229,11 +234,12 @@ class Knack {
         allRecords = allRecords.concat(records)
       }
     } catch (error) {
-      console.error(error)
-      if (retry < 2) {
+      if (retry < MAX_RETRY) {
         retry += 1
         await sleep()
         this.get(objectNo, retry)
+      } else {
+        throw new Error(error)
       }
     }
     return allRecords
@@ -245,17 +251,18 @@ class Knack {
         headers: this.headers
       })).json()
     } catch (error) {
-      console.error(error)
-      if (retry < 2) {
+      if (retry < MAX_RETRY) {
         retry += 1
         await sleep()
         this.getOne(objectNo, id, retry)
+      } else {
+        throw new Error(error)
       }
     }
   }
 }
 
-function sleep ({ min = 1000, max = 10000 }) {
+function sleep ({ min = MIN_SLEEP, max = MAX_SLEEP }) {
   let ms = Math.random() * (max - min) + min
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
