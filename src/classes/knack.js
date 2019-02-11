@@ -34,6 +34,31 @@ class Knack {
     }
   }
 
+  async parse (objectNo, body) {
+    const url = `${this.baseUrl}/${objectNo}`
+    let { object } = await (await fetch(url, { headers: this.headers })).json()
+
+    let parsedBody = Object.keys(body).reduce((obj, key) => {
+      if (key === 'id') {
+        obj['id'] = body[key]
+        return obj
+      }
+
+      let field = object.fields.find((f) => f.key === key)
+
+      if (!field) {
+        return obj
+      }
+
+      let { name } = field
+      if (name) obj[name] = body[key]
+
+      return obj
+    }, {})
+
+    return parsedBody
+  }
+
   async update (objectNo, recordId, update) {
     // console.log("Updating", objectNo, recordId, JSON.stringify(update));
 

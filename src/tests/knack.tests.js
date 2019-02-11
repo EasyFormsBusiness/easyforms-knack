@@ -42,6 +42,11 @@ describe('Testing Knack module', () => {
         console.log(newObj)
       })
 
+      it('Should parse a response', async () => {
+        let parsedRecord = await knack.parse('object_1', newObj)
+        assert.equal(Object.keys(parsedRecord).length > 0, true)
+      })
+
       it('Should throw an error if no body is passed', async () => {
         try {
           await knack.create(objectNo)
