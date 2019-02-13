@@ -33,6 +33,33 @@ describe('Testing Knack module', () => {
       })
     })
 
+    describe('Testing search', () => {
+      it('Should find the updated object', async () => {
+        console.log(
+          await knack.search(
+            objectNo,
+            {
+              match: 'and',
+              rules: [
+                {
+                  field: 'field_1',
+                  operator: 'is',
+                  value: 'stringstring'
+                },
+                {
+                  field: 'field_2',
+                  operator: 'is',
+                  value: 1
+                }
+              ]
+            },
+            'field_1',
+            'asc'
+          )
+        )
+      })
+    })
+
     describe('Testing create', () => {
       it('Should create an object', async () => {
         newObj = await knack.create(objectNo, {
@@ -112,33 +139,6 @@ describe('Testing Knack module', () => {
             'field_156',
             '/home/tkettle/code/knack/.eslintrc.json'
           )
-        )
-      })
-    })
-
-    describe('Testing search', () => {
-      it('Should find the updated object', async () => {
-        console.log(
-          (await knack.search(
-            objectNo,
-            {
-              match: 'and',
-              rules: [
-                {
-                  field: 'field_1',
-                  operator: 'is',
-                  value: 'stringstring'
-                },
-                {
-                  field: 'field_2',
-                  operator: 'is',
-                  value: 1
-                }
-              ]
-            },
-            'field_1',
-            'asc'
-          )).length
         )
       })
     })

@@ -201,12 +201,24 @@ class Knack {
     return row
   }
 
+  /**
+   *
+   *
+   * @param {String} objectNo
+   * @param {Array} filters
+   * @param {boolean} [sortField=false]
+   * @param {boolean} [sortOrder=false]
+   * @param {number} [retry=1]
+   * @returns
+   * @memberof Knack
+   */
   async search (
     objectNo,
     filters,
     sortField = false,
     sortOrder = false,
-    retry = 1
+    retry = 1,
+    parse = true
   ) {
     let page = 1
     let totalPages = 1
@@ -237,8 +249,6 @@ class Knack {
         totalPages = total_pages
         page += 1
       }
-
-      return allRecords
     } catch (error) {
       if (retry < MAX_RETRY) {
         await sleep()
@@ -253,6 +263,9 @@ class Knack {
         throw new Error(error)
       }
     }
+
+    if (parse) allRecords = this.parse(objectNo, allRecords)
+    return allRecords
   }
 
   /**
