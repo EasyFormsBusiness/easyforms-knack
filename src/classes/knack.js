@@ -37,11 +37,16 @@ class Knack {
   _parseObject (record, object) {
     let parsedRecord = Object.keys(record).reduce((obj, key) => {
       if (key === 'id') {
+        // Special exception for id since it is not in the parent objects fields
         obj['id'] = record[key]
+        return obj
+      } else if (!key.includes('_raw')) {
+        // We only want to pass the raw value of fields
         return obj
       }
 
-      let field = object.fields.find((f) => f.key === key)
+      // Replace the '_raw' so it will match the right column
+      let field = object.fields.find((f) => f.key === key.replace('_raw', ''))
 
       if (!field) {
         return obj
