@@ -13,6 +13,7 @@ describe('Testing Knack module', () => {
     field_1: 'string',
     field_2: 0
   }
+  const testRecord = '5b721dd585be9c6374a296f2'
 
   let knack = new Knack(key, id)
   knack.debug = true
@@ -20,15 +21,15 @@ describe('Testing Knack module', () => {
   describe('Testing CRUD', () => {
     let newObj
 
-    describe('Testing read', () => {
-      it('Should read all the records from a table', async () => {
-        await knack.get('object_1')
+    describe('Testing read one', () => {
+      it('Should one record from a table', async () => {
+        console.log(await knack.getOne('object_1', testRecord))
       })
     })
 
-    describe('Testing read one', () => {
-      it('Should one record from a table', async () => {
-        console.log(await knack.getOne('object_1', '5bdba448e3200d47b68e9071'))
+    describe('Testing read', () => {
+      it('Should read all the records from a table', async () => {
+        console.log(await knack.get('object_1'))
       })
     })
 

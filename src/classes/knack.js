@@ -34,13 +34,10 @@ class Knack {
     }
   }
 
-  async parse (objectNo, body) {
-    const url = `${this.baseUrl}/${objectNo}`
-    let { object } = await (await fetch(url, { headers: this.headers })).json()
-
-    let parsedBody = Object.keys(body).reduce((obj, key) => {
+  _parseObject (record, object) {
+    let parsedRecord = Object.keys(record).reduce((obj, key) => {
       if (key === 'id') {
-        obj['id'] = body[key]
+        obj['id'] = record[key]
         return obj
       }
 
@@ -51,12 +48,24 @@ class Knack {
       }
 
       let { name } = field
-      if (name) obj[name] = body[key]
+      if (name) obj[name] = record[key]
 
       return obj
     }, {})
 
-    return parsedBody
+    return parsedRecord
+  }
+
+  async parse (objectNo, body) {
+    let { object } = await (await fetch(`${this.baseUrl}/${objectNo}`, {
+      headers: this.headers
+    })).json()
+
+    if (Array.isArray(body)) {
+      return body.map((record) => this._parseObject(record, object))
+    } else {
+      return this._parseObject(body, object)
+    }
   }
 
   async update (objectNo, recordId, update) {
@@ -241,7 +250,16 @@ class Knack {
     }
   }
 
-  async get (objectNo, retry = 1) {
+  /**
+   *
+   *
+   * @param {String} objectNo
+   * @param {number} [retry=1]
+   * @param {boolean} [parse=false]
+   * @returns
+   * @memberof Knack
+   */
+  async get (objectNo, retry = 1, parse = true) {
     let allRecords = []
     let page = 1
     let totalPages = 1
@@ -267,14 +285,24 @@ class Knack {
         throw new Error(error)
       }
     }
+
+    if (parse) allRecords = this.parse(objectNo, allRecords)
+
     return allRecords
   }
 
-  async getOne (objectNo, id, retry = 1) {
+  async getOne (objectNo, id, retry = 1, parse = true) {
     try {
-      return await (await fetch(`${this.baseUrl}/${objectNo}/records/${id}`, {
-        headers: this.headers
-      })).json()
+      let response = await (await fetch(
+        `${this.baseUrl}/${objectNo}/records/${id}`,
+        {
+          headers: this.headers
+        }
+      )).json()
+
+      if (parse) response = this.parse(objectNo, response)
+
+      return response
     } catch (error) {
       if (retry < MAX_RETRY) {
         retry += 1
