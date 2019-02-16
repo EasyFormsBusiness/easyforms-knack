@@ -46,7 +46,7 @@ class Knack {
       }
 
       // Replace the '_raw' so it will match the right column
-      let field = object.fields.find((f) => f.key === key.replace('_raw', ''))
+      let field = object.fields.find(f => f.key === key.replace('_raw', ''))
 
       if (!field) {
         return obj
@@ -67,7 +67,7 @@ class Knack {
     })).json()
 
     if (Array.isArray(body)) {
-      return body.map((record) => this._parseObject(record, object))
+      return body.map(record => this._parseObject(record, object))
     } else {
       return this._parseObject(body, object)
     }
@@ -331,11 +331,45 @@ class Knack {
       }
     }
   }
+
+  async getObjects () {
+    try {
+      let response = await (await fetch(`${this.baseUrl}/`, {
+        headers: this.headers
+      })).json()
+      return response
+    } catch (error) {
+      if (retry < MAX_RETRY) {
+        retry += 1
+        await sleep()
+        this.getOne(objectNo, id, retry)
+      } else {
+        throw new Error(error)
+      }
+    }
+  }
+
+  async getObject (objectNo) {
+    try {
+      let response = await (await fetch(`${this.baseUrl}/${objectNo}`, {
+        headers: this.headers
+      })).json()
+      return response
+    } catch (error) {
+      if (retry < MAX_RETRY) {
+        retry += 1
+        await sleep()
+        this.getOne(objectNo, id, retry)
+      } else {
+        throw new Error(error)
+      }
+    }
+  }
 }
 
 function sleep ({ min = MIN_SLEEP, max = MAX_SLEEP }) {
   let ms = Math.random() * (max - min) + min
-  return new Promise((resolve) => setTimeout(resolve, ms))
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 module.exports = Knack
